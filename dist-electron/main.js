@@ -13,6 +13,10 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
@@ -37,19 +41,16 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("https:"))
-      shell.openExternal(url);
+    if (url.startsWith("https:")) shell.openExternal(url);
     return { action: "deny" };
   });
 };
 app.whenReady().then(() => {
   createWindow();
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0)
-      createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin")
-    app.quit();
+  if (process.platform !== "darwin") app.quit();
 });
